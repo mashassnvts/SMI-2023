@@ -1,0 +1,70 @@
+$Пользовательские функции
+function number power [number a, number b]
+{
+	def number i = 2;
+	def number res = a * 3 - ( b + 2 );
+	
+	give [res];
+}
+
+$Процедура
+procedure yourLogin [line login]
+{
+	outln["Смена логина проведена успешно!"];
+	out["Ваш новый логин: "];
+	outln[login];
+}
+
+
+program
+{
+   
+	$Вызов пользовательских функций
+	out["Результат: "];
+	def number resPow = power[6, 3];
+	outln[resPow];
+
+	out["Результат вычисления выражения отрицательный? - "];
+	def number expr =  (-8) / 2 - 5 % 2;
+	def bool resNeg = expr <= 0;
+	outln[resNeg]; 
+	out["Результат был: "]; outln[expr];
+
+	$Вызов процедуры
+	def line login = "Ivanov Ivan";
+	yourLogin[login];
+	
+	$Вызов функций стандартной библиотеки
+	out["Ваш баланс (в $): "];
+	def number balance = random[10, 100] + 5;
+	outln[balance];
+	out["Квадратный корень из 10 равен 4? - "];
+	def number resSqrt = sqrt[10];
+	when [resSqrt == 4]
+	{
+		outln["Да"];
+	}
+	otherwise
+	{
+		outln["Нет"];
+	}
+	
+	out["Длина строки равна 0? - "];
+	def line lineA = "abcdef";
+	def number lengthA = linelen[lineA];
+	def bool resA = lengthA ^= 0;
+	when [resA]
+	{
+		outln["Нет"];
+	}
+	otherwise
+	{
+		outln["Да"];
+	}
+	
+	def line resConcat = concat["Hello, ", "it's SMI-2023!"];
+	outln[resConcat];
+        
+
+}
+

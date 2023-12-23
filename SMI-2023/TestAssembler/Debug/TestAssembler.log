@@ -1,0 +1,22 @@
+﻿Сборка начата 18.12.2023 14:20:20.
+Уровень детализации журнала: Normal.     1>Проект "D:\3sem\SMI-2023\SMI-2023\TestAssembler\TestAssembler.vcxproj" в узле 2 (целевые объекты Build).
+     1>InitializeBuildStatus:
+         Создание "Debug\TestAssembler.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
+         Обращение к "Debug\TestAssembler.tlog\unsuccessfulbuild".
+       _MASM:
+         Assembling asm.asm...
+         cmd.exe /C "C:\Users\maria\AppData\Local\Temp\tmp5d4aa875225e40c6ac47ac0b9459369c.cmd"
+         ml.exe /c /nologo /Zi /Fo"Debug\asm.obj" /Fl"Debug\\" /W3 /errorReport:prompt  /Taasm.asm
+       Link:
+         D:\Professional\VC\Tools\MSVC\14.37.32822\bin\HostX86\x86\link.exe /ERRORREPORT:PROMPT /OUT:"D:\3sem\SMI-2023\SMI-2023\Debug\TestAssembler.exe" /INCREMENTAL /ILK:"Debug\TestAssembler.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\3sem\SMI-2023\SMI-2023\Debug\TestAssembler.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\3sem\SMI-2023\SMI-2023\Debug\TestAssembler.lib" /MACHINE:X86 Debug\asm.obj
+         TestAssembler.vcxproj -> D:\3sem\SMI-2023\SMI-2023\Debug\TestAssembler.exe
+       FinalizeBuildStatus:
+         Файл "Debug\TestAssembler.tlog\unsuccessfulbuild" удаляется.
+         Обращение к "Debug\TestAssembler.tlog\TestAssembler.lastbuildstate".
+     1>Сборка проекта "D:\3sem\SMI-2023\SMI-2023\TestAssembler\TestAssembler.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:00.85

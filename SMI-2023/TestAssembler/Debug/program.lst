@@ -1,0 +1,522 @@
+Microsoft (R) Macro Assembler Version 14.37.32825.0	    12/13/23 22:29:39
+program.asm						     Page 1 - 1
+
+
+				.586P
+				.model flat, stdcall
+				includelib libucrt.lib
+				includelib kernel32.lib
+				includelib ..\Debug\Library.lib
+				ExitProcess PROTO :DWORD
+
+				EXTRN CONCAT: proc
+				EXTRN LINELEN: proc
+				EXTRN RANDOM: proc
+				EXTRN SQRT: proc
+				EXTRN OutNumber: proc
+				EXTRN OutLine: proc
+				EXTRN OutBool: proc
+				EXTRN OutNumberLn: proc
+				EXTRN OutLineLn: proc
+				EXTRN OutBoolLn: proc
+
+				.stack 4096
+
+ 00000000			.const
+ 00000000 45 78 63 65 70		null_division BYTE "Exception: деление на ноль", 0
+	   74 69 6F 6E 3A
+	   20 E4 E5 EB E5
+	   ED E8 E5 20 ED
+	   E0 20 ED EE EB
+	   FC 00
+ 0000001B 0002				lit1	SWORD 2
+ 0000001D 0000				lit2	SWORD 0
+ 0000001F 0001				lit3	SWORD 1
+ 00000021 48 65 6C 6C 6F		lit4	BYTE "Hello world!", 0
+	   20 77 6F 72 6C
+	   64 21 00
+ 0000002E 42 79 65 20 77		lit5	BYTE "Bye world!", 0
+	   6F 72 6C 64 21
+	   00
+ 00000039 D1 EC E5 ED E0		lit6	BYTE "Смена логина проведена успешно!", 0
+	   20 EB EE E3 E8
+	   ED E0 20 EF F0
+	   EE E2 E5 E4 E5
+	   ED E0 20 F3 F1
+	   EF E5 F8 ED EE
+	   21 00
+ 00000059 C2 E0 F8 20 ED		lit7	BYTE "Ваш новый логин: ", 0
+	   EE E2 FB E9 20
+	   EB EE E3 E8 ED
+	   3A 20 00
+ 0000006B 36 20 E2 20 F1		lit8	BYTE "6 в степени 3 равно ", 0
+	   F2 E5 EF E5 ED
+	   E8 20 33 20 F0
+	   E0 E2 ED EE 20
+	   00
+ 00000080 0006				lit9	SWORD 6
+ 00000082 0003				lit10	SWORD 3
+ 00000084 D0 E5 E7 F3 EB		lit11	BYTE "Результат вычисления выражения отрицательный? - ", 0
+	   FC F2 E0 F2 20
+	   E2 FB F7 E8 F1
+	   EB E5 ED E8 FF
+	   20 E2 FB F0 E0
+	   E6 E5 ED E8 FF
+	   20 EE F2 F0 E8
+	   F6 E0 F2 E5 EB
+	   FC ED FB E9 3F
+	   20 2D 20 00
+ 000000B5 FFF8				lit12	SWORD -8
+ 000000B7 0005				lit13	SWORD 5
+ 000000B9 D0 E5 E7 F3 EB		lit14	BYTE "Результат был: ", 0
+	   FC F2 E0 F2 20
+	   E1 FB EB 3A 20
+	   00
+ 000000C9 49 76 61 6E 6F		lit15	BYTE "Ivanov Ivan", 0
+	   76 20 49 76 61
+	   6E 00
+ 000000D5 C2 E0 F8 20 E1		lit16	BYTE "Ваш баланс (в $): ", 0
+	   E0 EB E0 ED F1
+	   20 28 E2 20 24
+	   29 3A 20 00
+ 000000E8 000A				lit17	SWORD 10
+ 000000EA 0064				lit18	SWORD 100
+ 000000EC CA E2 E0 E4 F0		lit19	BYTE "Квадратный корень из 9 равен 4? - ", 0
+	   E0 F2 ED FB E9
+	   20 EA EE F0 E5
+	   ED FC 20 E8 E7
+	   20 39 20 F0 E0
+	   E2 E5 ED 20 34
+	   3F 20 2D 20 00
+ 0000010F 0009				lit20	SWORD 9
+ 00000111 0004				lit21	SWORD 4
+ 00000113 C4 E0 00			lit22	BYTE "Да", 0
+ 00000116 CD E5 F2 00			lit23	BYTE "Нет", 0
+ 0000011A C4 EB E8 ED E0		lit24	BYTE "Длина строки равна 0? - ", 0
+	   20 F1 F2 F0 EE
+	   EA E8 20 F0 E0
+	   E2 ED E0 20 30
+	   3F 20 2D 20 00
+ 00000133 61 62 63 64 65		lit25	BYTE "abcdef", 0
+	   66 00
+ 0000013A 48 65 6C 6C 6F		lit26	BYTE "Hello, ", 0
+	   2C 20 00
+ 00000142 69 74 27 73 20		lit27	BYTE "it's SMI-2023!", 0
+	   53 4D 49 2D 32
+	   30 32 33 21 00
+
+ 00000000			.data
+ 00000000  00000100 [			buffer BYTE 256 dup(0)
+	    00
+	   ]
+ 00000100 0000				power_i	SWORD 0
+ 00000102 0000				power_res	SWORD 0
+ 00000104 0000				program_resPow	SWORD 0
+ 00000106 0000				program_expr	SWORD 0
+ 00000108 0000				program_resNeg	SWORD 0
+ 0000010A 00000000			program_login	DWORD ?
+ 0000010E 0000				program_balance	SWORD 0
+ 00000110 0000				program_resSqrt	SWORD 0
+ 00000112 00000000			program_lineA	DWORD ?
+ 00000116 0000				program_lengthA	SWORD 0
+ 00000118 0000				program_resA	SWORD 0
+ 0000011A 00000000			program_resConcat	DWORD ?
+
+ 00000000			.code
+
+ 00000000			power PROC power_a : SWORD, power_b : SWORD
+ 00000003  66| FF 35			push lit1
+	   0000001B R
+ 0000000A  66| 8F 05			pop power_i
+	   00000100 R
+ 00000011  66| FF 75 08			push power_a
+ 00000015  66| 8F 05			pop power_res
+	   00000102 R
+ 0000001C  66| 8B 45 0C			mov ax, power_b
+ 00000020  66| 3B 05			cmp ax, lit2
+	   0000001D R
+ 00000027  74 02			je m0
+ 00000029  75 0E			jne m1
+ 0000002B			m0:
+ 0000002B  6A 01			push 1
+ 0000002D  EB 1D			jmp local0
+ 0000002F  68 00000021 R		push offset lit4
+ 00000034  E8 00000000 E		call OutLineLn
+ 00000039			m1:
+ 00000039  68 0000002E R		push offset lit5
+ 0000003E  E8 00000000 E		call OutLineLn
+ 00000043  66| FF 35			push power_res
+	   00000102 R
+ 0000004A  EB 00			jmp local0
+ 0000004C			local0:
+ 0000004C  58				pop eax
+					ret
+ 00000051			power ENDP
+
+ 00000051			yourLogin PROC yourLogin_login : DWORD
+ 00000054  68 00000039 R		push offset lit6
+ 00000059  E8 00000000 E		call OutLineLn
+ 0000005E  68 00000059 R		push offset lit7
+ 00000063  E8 00000000 E		call OutLine
+ 00000068  FF 75 08			push yourLogin_login
+ 0000006B  E8 00000000 E		call OutLineLn
+ 00000070			local1:
+ 00000070  58				pop eax
+					ret
+					ret
+ 00000079			yourLogin ENDP
+
+ 00000079			program PROC
+ 00000079  68 0000006B R		push offset lit8
+ 0000007E  E8 00000000 E		call OutLine
+ 00000083  66| FF 35			push lit9
+	   00000080 R
+ 0000008A  66| FF 35			push lit10
+	   00000082 R
+ 00000091  66| 5A			pop dx
+ 00000093  66| 5A			pop dx
+ 00000095  0F BF 05			movsx eax, lit10
+	   00000082 R
+ 0000009C  50				push eax
+ 0000009D  0F BF 05			movsx eax, lit9
+	   00000080 R
+ 000000A4  50				push eax
+ 000000A5  E8 FFFFFF56			call power
+ 000000AA  66| 50			push ax
+ 000000AC  66| 8F 05			pop program_resPow
+	   00000104 R
+ 000000B3  0F BF 05			movsx eax, program_resPow
+	   00000104 R
+ 000000BA  50				push eax
+ 000000BB  E8 00000000 E		call OutNumberLn
+ 000000C0  68 00000084 R		push offset lit11
+ 000000C5  E8 00000000 E		call OutLine
+ 000000CA  66| FF 35			push lit12
+	   000000B5 R
+ 000000D1  66| FF 35			push lit1
+	   0000001B R
+ 000000D8  66| 5B			pop bx
+ 000000DA  66| 58			pop ax
+ 000000DC  66| 83 FB 00			cmp bx, 0
+ 000000E0  0F 84 00000237		je nulldiv
+ 000000E6  66| 99			cwd
+ 000000E8  66| F7 FB			idiv bx
+ 000000EB  66| 50			push ax
+ 000000ED  66| FF 35			push lit13
+	   000000B7 R
+ 000000F4  66| FF 35			push lit1
+	   0000001B R
+ 000000FB  66| 5B			pop bx
+ 000000FD  66| 58			pop ax
+ 000000FF  66| 83 FB 00			cmp bx, 0
+ 00000103  0F 84 00000214		je nulldiv
+ 00000109  66| 99			cwd
+ 0000010B  66| F7 FB			idiv bx
+ 0000010E  66| 52			push dx
+ 00000110  66| 5B			pop bx
+ 00000112  66| 58			pop ax
+ 00000114  66| 2B C3			sub ax, bx
+ 00000117  66| 50			push ax
+ 00000119  66| 8F 05			pop program_expr
+	   00000106 R
+ 00000120  66| FF 35			push program_expr
+	   00000106 R
+ 00000127  66| FF 35			push lit2
+	   0000001D R
+ 0000012E  66| 5B			pop bx
+ 00000130  66| 58			pop ax
+ 00000132  66| 3B C3			cmp ax, bx
+ 00000135  7E 02			jle l0
+ 00000137  7F 08			jg l1
+ 00000139			l0:
+ 00000139  66| B8 0001			mov ax, 1
+ 0000013D  66| 50			push ax
+ 0000013F  EB 06			jmp endofexpr0
+ 00000141			l1:
+ 00000141  66| B8 0000			mov ax, 0
+ 00000145  66| 50			push ax
+
+ 00000147			endofexpr0:
+ 00000147  66| 58			pop ax
+ 00000149  66| 83 F8 00			cmp ax, 0
+ 0000014D  74 02			je l2
+ 0000014F  75 08			jne l3
+ 00000151			l2:
+ 00000151  66| B8 0000			mov ax, 0
+ 00000155  66| 50			push ax
+ 00000157  EB 06			jmp endofexpr1
+ 00000159			l3:
+ 00000159  66| B8 0001			mov ax, 1
+ 0000015D  66| 50			push ax
+
+ 0000015F			endofexpr1:
+ 0000015F  66| 8F 05			pop program_resNeg
+	   00000108 R
+ 00000166  0F BF 05			movsx eax, program_resNeg
+	   00000108 R
+ 0000016D  50				push eax
+ 0000016E  E8 00000000 E		call OutBoolLn
+ 00000173  68 000000B9 R		push offset lit14
+ 00000178  E8 00000000 E		call OutLine
+ 0000017D  0F BF 05			movsx eax, program_expr
+	   00000106 R
+ 00000184  50				push eax
+ 00000185  E8 00000000 E		call OutNumberLn
+ 0000018A  68 000000C9 R		push offset lit15
+ 0000018F  8F 05 0000010A R		pop program_login
+ 00000195  FF 35 0000010A R		push program_login
+ 0000019B  E8 FFFFFEB1			call yourLogin
+ 000001A0  68 000000D5 R		push offset lit16
+ 000001A5  E8 00000000 E		call OutLine
+ 000001AA  66| FF 35			push lit17
+	   000000E8 R
+ 000001B1  66| FF 35			push lit18
+	   000000EA R
+ 000001B8  66| 5A			pop dx
+ 000001BA  66| 5A			pop dx
+ 000001BC  0F BF 05			movsx eax, lit18
+	   000000EA R
+ 000001C3  50				push eax
+ 000001C4  0F BF 05			movsx eax, lit17
+	   000000E8 R
+ 000001CB  50				push eax
+ 000001CC  E8 00000000 E		call RANDOM
+ 000001D1  66| 50			push ax
+ 000001D3  66| FF 35			push lit13
+	   000000B7 R
+ 000001DA  66| 58			pop ax
+ 000001DC  66| 5B			pop bx
+ 000001DE  66| 03 C3			add ax, bx
+ 000001E1  66| 50			push ax
+ 000001E3  66| 8F 05			pop program_balance
+	   0000010E R
+ 000001EA  0F BF 05			movsx eax, program_balance
+	   0000010E R
+ 000001F1  50				push eax
+ 000001F2  E8 00000000 E		call OutNumberLn
+ 000001F7  68 000000EC R		push offset lit19
+ 000001FC  E8 00000000 E		call OutLine
+ 00000201  66| FF 35			push lit20
+	   0000010F R
+ 00000208  66| 5A			pop dx
+ 0000020A  0F BF 05			movsx eax, lit20
+	   0000010F R
+ 00000211  50				push eax
+ 00000212  E8 00000000 E		call SQRT
+ 00000217  66| 50			push ax
+ 00000219  66| 8F 05			pop program_resSqrt
+	   00000110 R
+ 00000220  66| A1			mov ax, program_resSqrt
+	   00000110 R
+ 00000226  66| 3B 05			cmp ax, lit21
+	   00000111 R
+ 0000022D  74 02			je m2
+ 0000022F  75 0C			jne m3
+ 00000231			m2:
+ 00000231  68 00000113 R		push offset lit22
+ 00000236  E8 00000000 E		call OutLineLn
+ 0000023B  EB 0A			jmp e0
+ 0000023D			m3:
+ 0000023D  68 00000116 R		push offset lit23
+ 00000242  E8 00000000 E		call OutLineLn
+ 00000247			e0:
+ 00000247  68 0000011A R		push offset lit24
+ 0000024C  E8 00000000 E		call OutLine
+ 00000251  68 00000133 R		push offset lit25
+ 00000256  8F 05 00000112 R		pop program_lineA
+ 0000025C  FF 35 00000112 R		push program_lineA
+ 00000262  66| 5A			pop dx
+ 00000264  FF 35 00000112 R		push program_lineA
+ 0000026A  E8 00000000 E		call LINELEN
+ 0000026F  66| 50			push ax
+ 00000271  66| 8F 05			pop program_lengthA
+	   00000116 R
+ 00000278  66| FF 35			push program_lengthA
+	   00000116 R
+ 0000027F  66| FF 35			push lit2
+	   0000001D R
+ 00000286  66| 5B			pop bx
+ 00000288  66| 58			pop ax
+ 0000028A  66| 3B C3			cmp ax, bx
+ 0000028D  75 02			jne l4
+ 0000028F  74 08			je l5
+ 00000291			l4:
+ 00000291  66| B8 0001			mov ax, 1
+ 00000295  66| 50			push ax
+ 00000297  EB 06			jmp endofexpr2
+ 00000299			l5:
+ 00000299  66| B8 0000			mov ax, 0
+ 0000029D  66| 50			push ax
+
+ 0000029F			endofexpr2:
+ 0000029F  66| 58			pop ax
+ 000002A1  66| 83 F8 00			cmp ax, 0
+ 000002A5  74 02			je l6
+ 000002A7  75 08			jne l7
+ 000002A9			l6:
+ 000002A9  66| B8 0000			mov ax, 0
+ 000002AD  66| 50			push ax
+ 000002AF  EB 06			jmp endofexpr3
+ 000002B1			l7:
+ 000002B1  66| B8 0001			mov ax, 1
+ 000002B5  66| 50			push ax
+
+ 000002B7			endofexpr3:
+ 000002B7  66| 8F 05			pop program_resA
+	   00000118 R
+ 000002BE  66| A1			mov ax, program_resA
+	   00000118 R
+ 000002C4  66| 83 F8 00			cmp ax, 0
+ 000002C8  75 02			jnz m4
+ 000002CA  74 0C			jz m5
+ 000002CC			m4:
+ 000002CC  68 00000116 R		push offset lit23
+ 000002D1  E8 00000000 E		call OutLineLn
+ 000002D6  EB 0A			jmp e1
+ 000002D8			m5:
+ 000002D8  68 00000113 R		push offset lit22
+ 000002DD  E8 00000000 E		call OutLineLn
+ 000002E2			e1:
+ 000002E2  68 0000013A R		push offset lit26
+ 000002E7  68 00000142 R		push offset lit27
+ 000002EC  66| 5A			pop dx
+ 000002EE  66| 5A			pop dx
+ 000002F0  68 00000142 R		push offset lit27
+ 000002F5  68 0000013A R		push offset lit26
+ 000002FA  68 00000000 R		push offset buffer
+ 000002FF  E8 00000000 E		call CONCAT
+ 00000304  50				push eax
+ 00000305  8F 05 0000011A R		pop program_resConcat
+ 0000030B  FF 35 0000011A R		push program_resConcat
+ 00000311  E8 00000000 E		call OutLineLn
+ 00000316			theend:
+ 00000316  6A 00			push 0
+ 00000318  E8 00000000 E		call ExitProcess
+ 0000031D			nulldiv:
+ 0000031D  68 00000000 R		push offset null_division
+ 00000322  E8 00000000 E		call OutLineLn
+ 00000327  6A FF			push -1
+ 00000329  E8 00000000 E		call ExitProcess
+ 0000032E			program ENDP
+				end program
+Microsoft (R) Macro Assembler Version 14.37.32825.0	    12/13/23 22:29:39
+program.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CONST  . . . . . . . . . . . . .	32 Bit	 00000151 Para	  Public  'CONST'	 ReadOnly
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000011E Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000032E Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+power  . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000051 Public STDCALL
+  power_a  . . . . . . . . . . .	Word	 bp + 00000008
+  power_b  . . . . . . . . . . .	Word	 bp + 0000000C
+  m0 . . . . . . . . . . . . . .	L Near	 0000002B _TEXT	
+  m1 . . . . . . . . . . . . . .	L Near	 00000039 _TEXT	
+  local0 . . . . . . . . . . . .	L Near	 0000004C _TEXT	
+program  . . . . . . . . . . . .	P Near	 00000079 _TEXT	Length= 000002B5 Public STDCALL
+  l0 . . . . . . . . . . . . . .	L Near	 00000139 _TEXT	
+  l1 . . . . . . . . . . . . . .	L Near	 00000141 _TEXT	
+  endofexpr0 . . . . . . . . . .	L Near	 00000147 _TEXT	
+  l2 . . . . . . . . . . . . . .	L Near	 00000151 _TEXT	
+  l3 . . . . . . . . . . . . . .	L Near	 00000159 _TEXT	
+  endofexpr1 . . . . . . . . . .	L Near	 0000015F _TEXT	
+  m2 . . . . . . . . . . . . . .	L Near	 00000231 _TEXT	
+  m3 . . . . . . . . . . . . . .	L Near	 0000023D _TEXT	
+  e0 . . . . . . . . . . . . . .	L Near	 00000247 _TEXT	
+  l4 . . . . . . . . . . . . . .	L Near	 00000291 _TEXT	
+  l5 . . . . . . . . . . . . . .	L Near	 00000299 _TEXT	
+  endofexpr2 . . . . . . . . . .	L Near	 0000029F _TEXT	
+  l6 . . . . . . . . . . . . . .	L Near	 000002A9 _TEXT	
+  l7 . . . . . . . . . . . . . .	L Near	 000002B1 _TEXT	
+  endofexpr3 . . . . . . . . . .	L Near	 000002B7 _TEXT	
+  m4 . . . . . . . . . . . . . .	L Near	 000002CC _TEXT	
+  m5 . . . . . . . . . . . . . .	L Near	 000002D8 _TEXT	
+  e1 . . . . . . . . . . . . . .	L Near	 000002E2 _TEXT	
+  theend . . . . . . . . . . . .	L Near	 00000316 _TEXT	
+  nulldiv  . . . . . . . . . . .	L Near	 0000031D _TEXT	
+yourLogin  . . . . . . . . . . .	P Near	 00000051 _TEXT	Length= 00000028 Public STDCALL
+  yourLogin_login  . . . . . . .	DWord	 bp + 00000008
+  local1 . . . . . . . . . . . .	L Near	 00000070 _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+CONCAT . . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+LINELEN  . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+OutBoolLn  . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+OutBool  . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+OutLineLn  . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+OutLine  . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+OutNumberLn  . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+OutNumber  . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+RANDOM . . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+SQRT . . . . . . . . . . . . . .	L Near	 00000000 FLAT	External STDCALL
+buffer . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+lit10  . . . . . . . . . . . . .	Word	 00000082 CONST	
+lit11  . . . . . . . . . . . . .	Byte	 00000084 CONST	
+lit12  . . . . . . . . . . . . .	Word	 000000B5 CONST	
+lit13  . . . . . . . . . . . . .	Word	 000000B7 CONST	
+lit14  . . . . . . . . . . . . .	Byte	 000000B9 CONST	
+lit15  . . . . . . . . . . . . .	Byte	 000000C9 CONST	
+lit16  . . . . . . . . . . . . .	Byte	 000000D5 CONST	
+lit17  . . . . . . . . . . . . .	Word	 000000E8 CONST	
+lit18  . . . . . . . . . . . . .	Word	 000000EA CONST	
+lit19  . . . . . . . . . . . . .	Byte	 000000EC CONST	
+lit1 . . . . . . . . . . . . . .	Word	 0000001B CONST	
+lit20  . . . . . . . . . . . . .	Word	 0000010F CONST	
+lit21  . . . . . . . . . . . . .	Word	 00000111 CONST	
+lit22  . . . . . . . . . . . . .	Byte	 00000113 CONST	
+lit23  . . . . . . . . . . . . .	Byte	 00000116 CONST	
+lit24  . . . . . . . . . . . . .	Byte	 0000011A CONST	
+lit25  . . . . . . . . . . . . .	Byte	 00000133 CONST	
+lit26  . . . . . . . . . . . . .	Byte	 0000013A CONST	
+lit27  . . . . . . . . . . . . .	Byte	 00000142 CONST	
+lit2 . . . . . . . . . . . . . .	Word	 0000001D CONST	
+lit3 . . . . . . . . . . . . . .	Word	 0000001F CONST	
+lit4 . . . . . . . . . . . . . .	Byte	 00000021 CONST	
+lit5 . . . . . . . . . . . . . .	Byte	 0000002E CONST	
+lit6 . . . . . . . . . . . . . .	Byte	 00000039 CONST	
+lit7 . . . . . . . . . . . . . .	Byte	 00000059 CONST	
+lit8 . . . . . . . . . . . . . .	Byte	 0000006B CONST	
+lit9 . . . . . . . . . . . . . .	Word	 00000080 CONST	
+null_division  . . . . . . . . .	Byte	 00000000 CONST	
+power_i  . . . . . . . . . . . .	Word	 00000100 _DATA	
+power_res  . . . . . . . . . . .	Word	 00000102 _DATA	
+program_balance  . . . . . . . .	Word	 0000010E _DATA	
+program_expr . . . . . . . . . .	Word	 00000106 _DATA	
+program_lengthA  . . . . . . . .	Word	 00000116 _DATA	
+program_lineA  . . . . . . . . .	DWord	 00000112 _DATA	
+program_login  . . . . . . . . .	DWord	 0000010A _DATA	
+program_resA . . . . . . . . . .	Word	 00000118 _DATA	
+program_resConcat  . . . . . . .	DWord	 0000011A _DATA	
+program_resNeg . . . . . . . . .	Word	 00000108 _DATA	
+program_resPow . . . . . . . . .	Word	 00000104 _DATA	
+program_resSqrt  . . . . . . . .	Word	 00000110 _DATA	
+
+	   0 Warnings
+	   0 Errors

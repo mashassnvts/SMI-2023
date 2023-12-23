@@ -1,0 +1,29 @@
+﻿Сборка начата 14.12.2023 10:57:59.
+Уровень детализации журнала: Normal.     1>Проект "D:\3sem\SMI-2023\SMI-2023\Library\Library.vcxproj" в узле 2 (целевые объекты Build).
+     1>InitializeBuildStatus:
+         Создание "Debug\Library.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
+         Обращение к "Debug\Library.tlog\unsuccessfulbuild".
+       ClCompile:
+         D:\Professional\VC\Tools\MSVC\14.37.32822\bin\HostX86\x86\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"Debug\\" /Fd"D:\3sem\SMI-2023\SMI-2023\Debug\Library.pdb" /external:W3 /Gd /TP /analyze- /FC /errorReport:prompt Library.cpp
+         Library.cpp
+     1>D:\3sem\SMI-2023\SMI-2023\Library\Library.cpp(7,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+       Lib:
+         D:\Professional\VC\Tools\MSVC\14.37.32822\bin\HostX86\x86\Lib.exe /OUT:"D:\3sem\SMI-2023\SMI-2023\Debug\Library.lib" /NOLOGO /MACHINE:X86 Debug\Library.obj
+         Library.vcxproj -> D:\3sem\SMI-2023\SMI-2023\Debug\Library.lib
+       TlogCleanup:
+         Следующие элементы будут удалены из tlogs, так как они были удалены из проекта или сборки: D:\3 sem\SMI-2023\SMI-2023\Library\Library.cpp.
+       FinalizeBuildStatus:
+         Файл "Debug\Library.tlog\unsuccessfulbuild" удаляется.
+         Обращение к "Debug\Library.tlog\Library.lastbuildstate".
+     1>Сборка проекта "D:\3sem\SMI-2023\SMI-2023\Library\Library.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+       "D:\3sem\SMI-2023\SMI-2023\Library\Library.vcxproj" (целевой объект Build ) (1) ->
+       (Целевой объект ClCompile) -> 
+         D:\3sem\SMI-2023\SMI-2023\Library\Library.cpp(7,13): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+
+    Предупреждений: 1
+    Ошибок: 0
+
+Прошло времени 00:00:01.74
